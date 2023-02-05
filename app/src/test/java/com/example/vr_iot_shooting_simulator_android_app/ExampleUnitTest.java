@@ -1,4 +1,4 @@
-package com.example.vriotshootingsimulator;
+package com.example.vr_iot_shooting_simulator_android_app;
 
 import org.junit.Test;
 

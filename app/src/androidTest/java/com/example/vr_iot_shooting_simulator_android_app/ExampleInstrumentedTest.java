@@ -1,4 +1,4 @@
-package com.example.vriotshootingsimulator;
+package com.example.vr_iot_shooting_simulator_android_app;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.vriotshootingsimulator", appContext.getPackageName());
+        assertEquals("com.example.vr_iot_shooting_simulator_android_app", appContext.getPackageName());
     }
 }
