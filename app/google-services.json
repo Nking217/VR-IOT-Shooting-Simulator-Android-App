@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:482364614399:android:52d5f245febc85cb990eca",
+        "mobilesdk_app_id": "1:482364614399:android:ebfc5e89404ae588990eca",
         "android_client_info": {
           "package_name": "com.example.vr_iot_shooting_simulator_android_app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "482364614399-huhfhi53ho85lmuqsutsrg6g009rrqjb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vr_iot_shooting_simulator_android_app",
+            "certificate_hash": "8eaac7d3122cf1348a324a95ca52a932a8a12310"
+          }
+        },
         {
           "client_id": "482364614399-u7tkqp4ve9mea6qhddkupg97l8b4tui7.apps.googleusercontent.com",
           "client_type": 3
