@@ -31,12 +31,7 @@ import java.util.Map;
 public class HomeActivity extends AppCompatActivity {
 
     ActivityHomeBinding binding;
-    TextView textFullName, textCoins;
-    String rtvFullName;
-    long rtvCoins;
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
 
 
 
@@ -46,8 +41,6 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
-        textFullName = findViewById(R.id.textView6);
-        textCoins = findViewById(R.id.Coins);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
@@ -70,45 +63,6 @@ public class HomeActivity extends AppCompatActivity {
 
             return true;
         });
-
-
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-
-
-        if(mAuth.getCurrentUser() != null){
-            rtvFullName = mAuth.getCurrentUser().getDisplayName();
-            textFullName.setText("Welcome " + rtvFullName);
-        }
-        else{
-            Toast.makeText(HomeActivity.this, "Error = no users found", Toast.LENGTH_SHORT).show();
-        }
-
-        db.collection("users")
-            .document(rtvFullName)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if(documentSnapshot != null && documentSnapshot.exists()){
-                            rtvCoins = documentSnapshot.getLong("coins");
-                            textCoins.setText("Coins = " + rtvCoins);
-
-                        }
-                    }
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(HomeActivity.this, "Error = " + e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
-
 
     }
 
