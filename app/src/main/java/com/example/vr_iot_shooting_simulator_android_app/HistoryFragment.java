@@ -28,6 +28,8 @@ public class HistoryFragment extends Fragment {
 
     ListView listView;
 
+    String rtvHistory;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,9 +37,29 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         listView = (ListView) view.findViewById(R.id.listview);
 
         ArrayList<String> arrayList = new ArrayList<>();
+
+
+        db.collection("users")
+                .document()
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot != null && documentSnapshot.exists()){
+                                rtvHistory = documentSnapshot.getString("game1");
+                                arrayList.add(rtvHistory);
+
+                            }
+                        }
+                    }
+                });
 
         arrayList.add("game1");
         arrayList.add("game2");
