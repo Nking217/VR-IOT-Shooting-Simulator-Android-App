@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-
+import java.util.Map;
 
 
 public class HistoryFragment extends Fragment {
-
+    ArrayAdapter arrayAdapter;
     ListView listView;
     String rtvFullName;
-    String rtvHistory;
+    Map rtvHistory;
+    Map map;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -50,27 +52,43 @@ public class HistoryFragment extends Fragment {
         else{
             Toast.makeText(getContext(), "Error = no users found", Toast.LENGTH_SHORT).show();
         }
+        arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, arrayList);
+        db.collection("users")
+                .document(rtvFullName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot != null && documentSnapshot.exists()){
+                                Map<String, Object> map = documentSnapshot.getData();
 
-//        db.collection("users")
-//                .document(rtvFullName)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            DocumentSnapshot documentSnapshot = task.getResult();
-//                            if(documentSnapshot != null && documentSnapshot.exists()){
-//                                rtvHistory = documentSnapshot.getString("game1");
-//                                arrayList.add(rtvHistory);
-//                            }
-//                        }
-//                    }
-//                });
 
-        arrayList.add("game1");
-        arrayList.add("game2");
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, arrayList);
+
+                                rtvHistory = map;
+                                rtvHistory.remove("coins");
+
+                                for (Map.Entry<String, Object> entry : map.entrySet()) {
+
+                                    arrayList.add(entry.getKey() +"="+ entry.getValue());
+                                    String[] arrOfStr = entry.getValue().toString().split(",");
+                                    for(int x = 0; x < arrOfStr.length; x++){
+                                        Log.d("Data", arrOfStr[x]);
+                                    }
+
+                                }
+                                arrayAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
+
+//        arrayList.add("game1");
+//        arrayList.add("game2");
+
+
 
          listView.setAdapter(arrayAdapter);
 

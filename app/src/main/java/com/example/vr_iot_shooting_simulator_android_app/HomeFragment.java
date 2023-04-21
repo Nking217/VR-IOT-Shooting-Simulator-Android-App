@@ -34,6 +34,7 @@ public class HomeFragment extends Fragment {
     TextView textFullName, textCoins, texttestformap;
     String rtvFullName;
     Map rtvHistory;
+    Map fixedHistory;
     long rtvCoins;
 
     private FirebaseAuth mAuth;
@@ -79,10 +80,14 @@ public class HomeFragment extends Fragment {
                                 Map<String, Object> map = documentSnapshot.getData();
                                 rtvCoins = documentSnapshot.getLong("coins");
                                 rtvHistory = map;
+                                rtvHistory.remove("coins");
+
                                 textCoins.setText("Coins = " + rtvCoins);
                                 texttestformap.setText(rtvHistory.toString());
 
+                                for(int i = 0; i < rtvHistory.size(); i++){
 
+                                }
                             }
                         }
                     }
