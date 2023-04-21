@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,24 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class HomeFragment extends Fragment {
 
-    TextView textFullName, textCoins;
+    TextView textFullName, textCoins, texttestformap;
     String rtvFullName;
+    Map rtvHistory;
     long rtvCoins;
 
     private FirebaseAuth mAuth;
@@ -36,10 +47,11 @@ public class HomeFragment extends Fragment {
 
         textFullName = (TextView)view.findViewById(R.id.textView6);
         textCoins = (TextView)view.findViewById(R.id.coins);
+        texttestformap =(TextView)view.findViewById(R.id.testformap);
 
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+
 
 
         if(mAuth.getCurrentUser() != null){
@@ -50,6 +62,9 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Error = no users found", Toast.LENGTH_SHORT).show();
         }
 
+
+        db = FirebaseFirestore.getInstance();
+        // mDatabase.child("users").child(userId).setValue(user);
         db.collection("users")
                 .document(rtvFullName)
                 .get()
@@ -58,9 +73,15 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             DocumentSnapshot documentSnapshot = task.getResult();
+                            //List<Map<String, Object>> mapsList = new ArrayList<>();
+
                             if(documentSnapshot != null && documentSnapshot.exists()){
+                                Map<String, Object> map = documentSnapshot.getData();
                                 rtvCoins = documentSnapshot.getLong("coins");
+                                rtvHistory = map;
                                 textCoins.setText("Coins = " + rtvCoins);
+                                texttestformap.setText(rtvHistory.toString());
+
 
                             }
                         }
