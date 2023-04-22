@@ -15,18 +15,25 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginStart="94dp"
-            android:layout_marginTop="348dp"
-            android:layout_marginEnd="93dp"
-            android:layout_marginBottom="348dp"
             android:text="Statistics Fragment"
             android:textSize="26dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.413"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.05" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="334dp"
+            android:layout_height="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.363"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.191" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

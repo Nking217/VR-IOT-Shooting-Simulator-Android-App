@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginScreen extends AppCompatActivity {
     private EditText editTextEmail, editTextPassword;
 
+
+
     private Button signIN;
 
     private FirebaseAuth mAuth;
@@ -31,14 +34,17 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
-
         signIN = (Button) findViewById(R.id.button);
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = (EditText) findViewById((R.id.password));
 
         mAuth = FirebaseAuth.getInstance();
+
+
     }
+
+
 
 
 
@@ -79,8 +85,9 @@ public class LoginScreen extends AppCompatActivity {
             });
         }
 
-    }
 
+
+    }
 
     public void login(View view) {
 
