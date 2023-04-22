@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -72,16 +73,20 @@ public class HistoryFragment extends Fragment {
 
                                 for (Map.Entry<String, Object> entry : map.entrySet()) {
 
-                                    arrayList.add(entry.getKey() +" = "+ entry.getValue());
+
+                                    String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage;
+
                                     String[] arrOfStr = entry.getValue().toString().split(",");
-                                    //String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage;
+
+
 
                                     for(int x = 0; x < arrOfStr.length; x++){
                                         if(arrOfStr[x].contains("{")){
-                                            arrOfStr[x].replace("{","");
+                                            arrOfStr[x] = arrOfStr[x].replace("{","");
+
                                         }
                                         else if(arrOfStr[x].contains("}")){
-                                            arrOfStr[x].replace("}", "");
+                                            arrOfStr[x] = arrOfStr[x].replace("}", "");
                                         }
                                         //Log.d("Data", arrOfStr[x]);
                                     }
@@ -89,7 +94,19 @@ public class HistoryFragment extends Fragment {
                                         Log.d("Data", arrOfStr[y]);
 
                                     }
+                                    String[] bodycenterarr = arrOfStr[0].split("=");
+                                    bodyShotCenterPercentage = bodycenterarr[1].toString();
 
+                                    String[] headshotarr = arrOfStr[1].split("=");
+                                    headShotPercentage = headshotarr[1].toString();
+
+                                    String[] hitaccurarr = arrOfStr[2].split("=");
+                                    hitAccuracy = hitaccurarr[1].toString();
+
+                                    String[] bodycwidearr = arrOfStr[3].split("=");
+                                    bodyShotWidePercentage = bodycwidearr[1].toString();
+                                    //+ entry.getValue() + "\n"
+                                    arrayList.add("Game - " + entry.getKey() + "\n" + "Body shot Center = " + bodyShotCenterPercentage + "\n" + "HeadShot = " + headShotPercentage + "\n" + "Hit Accuracy = " + hitAccuracy + "\n" + "Body shot wide = " + bodyShotWidePercentage); //Prints value on the array list
                                 }
                                 arrayAdapter.notifyDataSetChanged();
                             }

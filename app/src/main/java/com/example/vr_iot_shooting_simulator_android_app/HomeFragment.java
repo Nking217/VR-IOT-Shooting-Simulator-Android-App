@@ -31,10 +31,9 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
-    TextView textFullName, textCoins, texttestformap;
+    TextView textFullName, textCoins;
     String rtvFullName;
-    Map rtvHistory;
-    Map fixedHistory;
+
     long rtvCoins;
 
     private FirebaseAuth mAuth;
@@ -48,12 +47,8 @@ public class HomeFragment extends Fragment {
 
         textFullName = (TextView)view.findViewById(R.id.textView6);
         textCoins = (TextView)view.findViewById(R.id.coins);
-        texttestformap =(TextView)view.findViewById(R.id.testformap);
-
 
         mAuth = FirebaseAuth.getInstance();
-
-
 
         if(mAuth.getCurrentUser() != null){
             rtvFullName = mAuth.getCurrentUser().getDisplayName();
@@ -79,15 +74,9 @@ public class HomeFragment extends Fragment {
                             if(documentSnapshot != null && documentSnapshot.exists()){
                                 Map<String, Object> map = documentSnapshot.getData();
                                 rtvCoins = documentSnapshot.getLong("coins");
-                                rtvHistory = map;
-                                rtvHistory.remove("coins");
+
 
                                 textCoins.setText("Coins = " + rtvCoins);
-                                texttestformap.setText(rtvHistory.toString());
-
-                                for(int i = 0; i < rtvHistory.size(); i++){
-
-                                }
                             }
                         }
                     }
