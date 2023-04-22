@@ -72,10 +72,22 @@ public class HistoryFragment extends Fragment {
 
                                 for (Map.Entry<String, Object> entry : map.entrySet()) {
 
-                                    arrayList.add(entry.getKey() +"="+ entry.getValue());
+                                    arrayList.add(entry.getKey() +" = "+ entry.getValue());
                                     String[] arrOfStr = entry.getValue().toString().split(",");
+                                    //String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage;
+
                                     for(int x = 0; x < arrOfStr.length; x++){
-                                        Log.d("Data", arrOfStr[x]);
+                                        if(arrOfStr[x].contains("{")){
+                                            arrOfStr[x].replace("{","");
+                                        }
+                                        else if(arrOfStr[x].contains("}")){
+                                            arrOfStr[x].replace("}", "");
+                                        }
+                                        //Log.d("Data", arrOfStr[x]);
+                                    }
+                                    for(int y = 0; y < arrOfStr.length; y++){
+                                        Log.d("Data", arrOfStr[y]);
+
                                     }
 
                                 }
