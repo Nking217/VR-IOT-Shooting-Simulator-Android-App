@@ -9,23 +9,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 public class StatisticsFragment extends Fragment {
 
     private static final String TAG = "StatisticsFragment";
+    private ProgressBar progressBar;
 
-    private SeekBar mSeekBar;
-
+    String rtvFullName;
+    Map rtvHistory;
+    Map map;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    public int headshotsum, bodywidesum, bodycentersum, hitaccuracysum;
+    public int headshotpercentagetotal, bodywidepercentagetotal, bodycenterpercentagetotal, hitaccuracypercentagetotal;
+    public int cnt;
     public StatisticsFragment() {
         // Required empty public constructor
     }
@@ -33,42 +47,91 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+        progressBar.findViewById(R.id.HitAccuracyProgressBar);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        mSeekBar = view.findViewById(R.id.seekBar);
+        //progressBar.setProgress(50);
+        //progressBar.setMax(100);
 
-        // Declare a FirebaseFirestore instance
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Get a reference to the document containing the array
-        DocumentReference docRef = db.collection("users").document("hitaccur");
+        if(mAuth.getCurrentUser() != null){
+            rtvFullName = mAuth.getCurrentUser().getDisplayName();
+        }
+        else{
+            Toast.makeText(getContext(), "Error = no users found", Toast.LENGTH_SHORT).show();
+        }
+        db.collection("users")
+                .document(rtvFullName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot != null && documentSnapshot.exists()){
+                                Map<String, Object> map = documentSnapshot.getData();
+                                rtvHistory = map;
+                                rtvHistory.remove("coins");
 
-        // Get the array from the document
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                // Get the array from the document snapshot
-                ArrayList<Long> array = (ArrayList<Long>) documentSnapshot.get("hitaccur");
+                                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                    String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage, gameTime;
+                                    String[] arrOfStr = entry.getValue().toString().split(",");
+                                    for(int x = 0; x < arrOfStr.length; x++){
+                                        if(arrOfStr[x].contains("{")){
+                                            arrOfStr[x] = arrOfStr[x].replace("{","");
 
-                // Calculate the average of the elements in the array
-                long sum = 0;
-                for (long num : array) {
-                    sum += num;
-                }
-                double average = sum / (double) array.size();
+                                        }
+                                        else if(arrOfStr[x].contains("}")){
+                                            arrOfStr[x] = arrOfStr[x].replace("}", "");
+                                        }
+                                        Log.d("Data", arrOfStr[x]);
+                                    }
+                                    for(int y = 0; y < arrOfStr.length; y++){
+                                        Log.d("Data", arrOfStr[y]);
 
-                // Update the SeekBar with the average value
-                int progress = (int) Math.round(average);
-                mSeekBar.setProgress(progress);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle any errors
-                Log.w(TAG, "Error getting document", e);
-            }
-        });
+                                    }
+                                    cnt = arrOfStr.length;
+                                    String[] bodycenterarr = arrOfStr[0].split("=");
+                                    bodycentersum += Integer.parseInt(bodycenterarr[1]);
+
+                                    String[] headshotarr = arrOfStr[1].split("=");
+                                    headshotsum += Integer.parseInt(headshotarr[1]);
+
+                                    String[] hitaccurarr = arrOfStr[2].split("=");
+                                    hitaccuracysum += Integer.parseInt(hitaccurarr[1]);
+
+                                    String[] bodycwidearr = arrOfStr[3].split("=");
+                                    bodywidesum += Integer.parseInt(bodycwidearr[1]);
+                                    /*
+                                    String[] gametimearr = arrOfStr[4].split("=");
+                                    gameTime = gametimearr[1].toString();
+                                    */
+                                    //+ entry.getValue() + "\n"
+                                    //arrayList.add("Game - " + entry.getKey() + "\n" + "Body shot Center = " + bodyShotCenterPercentage + "\n" + "HeadShot = " + headShotPercentage + "\n" + "Hit Accuracy = " + hitAccuracy + "\n" + "Body shot wide = " + bodyShotWidePercentage); //Prints value on the array list
+                                }
+                                // -----------------------------------------------
+                                // ------------ Values For Percentage ------------
+                                // ------------ In the progress bar --------------
+                                // -----------------------------------------------
+                                bodycenterpercentagetotal = bodycentersum/cnt;
+                                bodywidepercentagetotal = bodywidesum/cnt;
+                                headshotpercentagetotal = headshotsum/cnt;
+                                hitaccuracypercentagetotal = hitaccuracysum/cnt;
+
+
+                                //Crashing not because of this
+                                progressBar.setProgress(hitaccuracypercentagetotal);
+                                progressBar.setMax(100);
+
+
+                            }
+                        }
+                    }
+                });
         return view;
     }
 }

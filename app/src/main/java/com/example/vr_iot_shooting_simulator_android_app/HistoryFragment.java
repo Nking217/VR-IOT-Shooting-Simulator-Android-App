@@ -74,7 +74,7 @@ public class HistoryFragment extends Fragment {
                                 for (Map.Entry<String, Object> entry : map.entrySet()) {
 
 
-                                    String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage;
+                                    String hitAccuracy, bodyShotWidePercentage, headShotPercentage, bodyShotCenterPercentage, gameTime;
 
                                     String[] arrOfStr = entry.getValue().toString().split(",");
 
@@ -88,7 +88,7 @@ public class HistoryFragment extends Fragment {
                                         else if(arrOfStr[x].contains("}")){
                                             arrOfStr[x] = arrOfStr[x].replace("}", "");
                                         }
-                                        //Log.d("Data", arrOfStr[x]);
+                                        Log.d("Data", arrOfStr[x]);
                                     }
                                     for(int y = 0; y < arrOfStr.length; y++){
                                         Log.d("Data", arrOfStr[y]);
@@ -105,6 +105,11 @@ public class HistoryFragment extends Fragment {
 
                                     String[] bodycwidearr = arrOfStr[3].split("=");
                                     bodyShotWidePercentage = bodycwidearr[1].toString();
+                                    /*
+                                    String[] gametimearr = arrOfStr[4].split("=");
+                                    gameTime = gametimearr[1].toString();
+                                    */
+
                                     //+ entry.getValue() + "\n"
                                     arrayList.add("Game - " + entry.getKey() + "\n" + "Body shot Center = " + bodyShotCenterPercentage + "\n" + "HeadShot = " + headShotPercentage + "\n" + "Hit Accuracy = " + hitAccuracy + "\n" + "Body shot wide = " + bodyShotWidePercentage); //Prints value on the array list
                                 }
